@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>FXクラウドシリーズ 選定フローチャート簡易診断</title>
+  <meta name="description" content="FXクラウドシリーズの自計化構成を、YES／NOで簡単に診断できるチェックツールです。">
+
+  <style>
+    :root{
+      --bg:#f4f9fb;
+      --card:#ffffff;
+      --ink:#1e2a2d;
+      --muted:#5a6a6d;
+      --accent:#578899;
+      --accent-dark:#476a7c;
+      --accent-soft:rgba(87,136,153,.08);
+      --border:#dde5ea;
+    }
+
+    *{box-sizing:border-box;}
+
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",sans-serif;
+      background:var(--bg);
+      color:var(--ink);
+    }
+
+    .app{
+      max-width:900px;
+      margin:0 auto;
+      padding:24px 16px 40px;
+    }
+
+    h1{
+      font-size:1.6rem;
+      margin:0 0 .3rem;
+    }
+
+    p{
+      line-height:1.7;
+      margin:.25rem 0 .5rem;
+    }
+
+    .progress{
+      margin:16px 0 20px;
+      height:8px;
+      border-radius:999px;
+      background:#dde5ea;
+      overflow:hidden;
+    }
+
+    .progress-bar{
+      height:100%;
+      width:0%;
+      background:var(--accent);
+      transition:width .25s ease;
+    }
+
+    .question-card{
+      background:var(--card);
+      border-radius:12px;
+      box-shadow:0 4px 18px rgba(0,0,0,.05);
+      padding:20px 18px 18px;
+    }
+
+    .q-number{
+      font-size:.85rem;
+      color:var(--muted);
+      margin-bottom:4px;
+    }
+
+    .q-title{
+      font-weight:600;
+      margin-bottom:6px;
+      font-size:1.02rem;
+    }
+
+    .q-category{
+      display:inline-block;
+      font-size:.8rem;
+      padding:2px 8px;
+      border-radius:999px;
+      background:#eef3f6;
+      color:var(--accent-dark);
+      margin-left:4px;
+    }
+
+    .q-text{
+      margin-bottom:12px;
+      line-height:1.7;
+    }
+
+    .point-label{
+      font-size:.8rem;
+      font-weight:600;
+      color:var(--accent-dark);
+      letter-spacing:.04em;
+    }
+
+    .point-box{
+      margin-top:4px;
+      padding:10px 12px;
+      border-left:3px solid var(--accent);
+      background:var(--accent-soft);
+      font-size:.9rem;
+      line-height:1.7;
+    }
+
+    .btn-row{
+      margin-top:14px;
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
+
+    button{
+      border-radius:999px;
+      border:1px solid transparent;
+      padding:8px 18px;
+      font-size:.95rem;
+      cursor:pointer;
+      font-family:inherit;
+      background:#fff;
+      transition:background .15s ease,border-color .15s ease,color .15s ease,transform .05s ease;
+    }
+
+    button:active{
+      transform:translateY(1px);
+    }
+
+    .btn-yes{
+      background:var(--accent);
+      color:#fff;
+    }
+
+    .btn-yes:hover{
+      background:var(--accent-dark);
+    }
+
+    .btn-no{
+      background:#fff;
+      color:var(--accent);
+      border-color:var(--accent);
+    }
+
+    .btn-no:hover{
+      background:#eef3f6;
+    }
+
+    .btn-back{
+      margin-right:auto;
+      background:transparent;
+      color:var(--muted);
+      border-color:transparent;
+      padding-left:0;
+    }
+
+    .btn-back:hover{
+      text-decoration:underline;
+      background:transparent;
+    }
+
+    .result{
+      display:none;
+      margin-top:12px;
+    }
+
+    .result h2{
+      margin-top:0;
+      margin-bottom:.5rem;
+    }
+
+    .badge{
+      display:inline-block;
+      padding:4px 10px;
+      font-size:.8rem;
+      border-radius:999px;
+      background:#eef3f6;
+      color:var(--accent-dark);
+      margin-right:4px;
+      margin-bottom:4px;
+    }
+
+    .summary-grid{
+      display:grid;
+      grid-template-columns:minmax(0,2fr) minmax(0,3fr);
+      gap:16px;
+      margin-top:12px;
+    }
+
+    @media (max-width:720px){
+      .summary-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
+    .summary-grid h3{
+      margin:.8rem 0 .3rem;
+      font-size:1rem;
+    }
+
+    .summary-grid ul{
+      margin:.25rem 0 .25rem 1.1rem;
+      padding:0;
+      font-size:.9rem;
+    }
+
+    .option-list li{
+      margin-bottom:4px;
+    }
+
+    .answers-table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:.9rem;
+      margin-top:16px;
+    }
+
+    .answers-table th,
+    .answers-table td{
+      border:1px solid var(--border);
+      padding:6px 8px;
+      vertical-align:top;
+    }
+
+    .answers-table th{
+      background:#f3f6f8;
+      text-align:left;
+      font-weight:600;
+    }
+
+    .answers-table td:nth-child(1){
+      white-space:nowrap;
+    }
+
+    .answer-yes{
+      color:#00695c;
+      font-weight:600;
+    }
+
+    .answer-no{
+      color:#b71c1c;
+      font-weight:600;
+    }
+
+    .note{
+      margin-top:12px;
+      font-size:.8rem;
+      color:var(--muted);
+      line-height:1.6;
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <h1>FXクラウドシリーズ 選定フローチャート簡易診断</h1>
+  <p>
+    貴社の自計化ニーズについて、YES／NOを選ぶだけでおすすめの構成とポイントを整理します。
+    （TKC FXクラウドシリーズ選定フローチャートをもとに作成）
+  </p>
+
+  <div class="progress">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <div id="questionArea" class="question-card"></div>
+
+  <div id="resultArea" class="result"></div>
+</div>
+
+<script>
+  const questions = [
+    {
+      id: "accountsStructure",
+      title: "勘定科目体系",
+      category: "会計・管理会計",
+      question: "財務三表とは別に、管理目的に応じて勘定科目を自由に設計・追加・並べ替えしたいですか？",
+      point: "売上高・仕入高・販管費などの勘定科目を自由に設計し、多数の売上・仕入科目を設定できます。管理会計に合わせた勘定科目体系を構築したい場合に重要です。"
+    },
+    {
+      id: "subAccount",
+      title: "同一科目の取引先別／口座別管理",
+      category: "会計・管理会計",
+      question: "同じ勘定科目について、取引先別や口座別などを組み合わせて残高管理をしたいですか？",
+      point: "1つの勘定科目に対して、口座別・取引先別など複数の残高管理が可能です。各月の売上を取引先別・商品カテゴリー別に同時に把握できます。"
+    },
+    {
+      id: "deptPerformance",
+      title: "部門業績管理（階層構造）",
+      category: "部門管理",
+      question: "地域別・店舗別・担当者別など、階層構造を持った部門業績管理を行いたいですか？",
+      point: "部門を多段階の階層で管理し、地域別・店舗別・担当者別など、さまざまな切り口で部門業績を確認できます。"
+    },
+    {
+      id: "deptBalance",
+      title: "部門別債権・債務管理",
+      category: "部門管理",
+      question: "売掛金・買掛金などの債権債務についても部門別に残高管理を行いたいですか？（本支店会計を含む）",
+      point: "債権債務の取引先別残高に部門軸を持たせ、本支店会計を含めた部門別管理が可能になります。"
+    },
+    {
+      id: "deptPermission",
+      title: "部門ごとの閲覧・入力権限",
+      category: "部門管理・統制",
+      question: "自部門のデータだけを閲覧・入力できるようにするなど、部門ごとの参照・入力権限を制御したいですか？",
+      point: "経理担当者が参照可能な部門を制限し、自部門だけが閲覧・入力できるようにする等の権限設定が可能です。部門別業績管理とあわせて統制を強化できます。"
+    },
+    {
+      id: "voucherWorkflow",
+      title: "証憑保存・ワークフロー",
+      category: "証憑保存・内部統制",
+      question: "各部門・支店からオンラインで証憑を保存し、経費申請～承認～仕訳計上までのワークフローを構築したいですか？",
+      point: "経理担当以外の部門でも証憑（領収書等）を保存でき、多段階承認機能により、経費申請→上長承認→経理承認→保存＆仕訳計上まで一連の流れをシステム化できます。"
+    },
+    {
+      id: "excelJournal",
+      title: "Excel日報・出納帳からの仕訳計上",
+      category: "仕訳自動化",
+      question: "Excelで作成している日報・出納帳などから、仕訳を自動・半自動で取り込みたいですか？",
+      point: "企業がExcelで作成している日報・出納帳・集計表などから仕訳を計上できます。部門共通費の配賦といった設計との併用運用も可能です。"
+    },
+    {
+      id: "systemJournal",
+      title: "業務システムからの仕訳取込",
+      category: "仕訳自動化",
+      question: "販売管理・給与・生産管理など、既存の業務システムの出力データを活用して仕訳を計上したいですか？",
+      point: "仕訳読込設計機能により、業務システムの出力データを加工して仕訳計上が可能です。明細単位での仕訳計上により、詳細な財務分析にも活用できます。"
+    },
+    {
+      id: "groupManagement",
+      title: "グループ会社の一元業績管理",
+      category: "グループ管理",
+      question: "複数のグループ会社をまとめて一元的に業績管理し、内部取引の相殺なども行いたいですか？",
+      point: "グループ会社全体の業績を一元管理し、会社間の内部取引相殺や経理処理の統一を図ることができます。全体業績を効率的に把握したい場合に有効です。"
+    },
+    {
+      id: "ipoControl",
+      title: "IPO・内部統制対応",
+      category: "内部統制・IPO",
+      question: "株式上場（IPO）や高度な内部統制（IT全般統制・IT業務処理統制）への対応を視野に入れていますか？",
+      point: "上場企業レベルの内部統制への対応が求められる場合、IT全般統制・IT業務処理統制へ対応した運用が重要になります。受託業務の内部統制保証報告書（いわゆる3402監査報告書）等も検討対象となります。"
+    },
+    {
+      id: "payManagement",
+      title: "支払管理機能",
+      category: "オプション：支払管理",
+      question: "売掛金の回収予定・買掛金の支払予定・借入金返済・手形決済など、入金・支払予定を一覧で管理したいですか？",
+      point: "売掛金の回収予定・買掛金の支払予定・借入金返済・手形決済など、さまざまな入金／支払予定を網羅した支払計画表を作成できます。支払をシステム上で一元管理し、支払ファイルから銀行振込に連携する運用が可能です。"
+    },
+    {
+      id: "payroll",
+      title: "給与計算機能",
+      category: "オプション：給与計算",
+      question: "従業員数が30名以上、または複数事業所があり、給与計算の合理化や賃金配分の見える化を行いたいですか？",
+      point: "経営者による賃金の適正配分の判断と、給与事務の合理化を支援します。従業員数が一定規模以上の場合や、複数事業所を持つ場合に特に効果を発揮します。"
+    },
+    {
+      id: "reportDesign",
+      title: "独自帳票設計（設計マネジメント等）",
+      category: "オプション：帳票設計・経営資料",
+      question: "関与先独自の管理資料（Excel等）を、会計データから自動作成できるようにしたいですか？",
+      point: "設計ツールを活用することで、既にExcelで作成している独自帳票を会計データと連動させ、自動更新される経営資料として運用できます。"
+    }
+  ];
+
+  const answers = {};
+  let currentIndex = 0;
+
+  function updateProgress() {
+    const bar = document.getElementById("progressBar");
+    const total = questions.length;
+    const ratio = Math.min(currentIndex, total) / total;
+    bar.style.width = (ratio * 100) + "%";
+  }
+
+  function renderQuestion() {
+    const total = questions.length;
+    const q = questions[currentIndex];
+    const area = document.getElementById("questionArea");
+    const resultArea = document.getElementById("resultArea");
+
+    area.style.display = "block";
+    resultArea.style.display = "none";
+
+    updateProgress();
+
+    area.innerHTML = `
+      <div class="q-number">
+        質問 ${currentIndex + 1} / ${total}
+        <span class="q-category">${q.category}</span>
+      </div>
+      <div class="q-title">${q.title}</div>
+      <div class="q-text">${q.question}</div>
+      <div class="point-label">POINT</div>
+      <div class="point-box">${q.point}</div>
+      <div class="btn-row">
+        ${currentIndex > 0 ? '<button type="button" class="btn-back" id="backBtn">← 戻る</button>' : ""}
+        <button type="button" class="btn-no" data-answer="no">NO</button>
+        <button type="button" class="btn-yes" data-answer="yes">YES</button>
+      </div>
+    `;
+
+    area.querySelectorAll("[data-answer]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const answer = btn.getAttribute("data-answer");
+        answers[q.id] = answer;
+        currentIndex++;
+        if (currentIndex < total) {
+          renderQuestion();
+        } else {
+          showResult();
+        }
+      });
+    });
+
+    const backBtn = area.querySelector("#backBtn");
+    if (backBtn) {
+      backBtn.addEventListener("click", () => {
+        currentIndex = Math.max(0, currentIndex - 1);
+        renderQuestion();
+      });
+    }
+  }
+
+  function showResult() {
+    const area = document.getElementById("questionArea");
+    const resultArea = document.getElementById("resultArea");
+    const total = questions.length;
+    const yesCount = questions.filter(q => answers[q.id] === "yes").length;
+
+    // ざっくりとしたレベル判定（必要に応じて調整してください）
+    let level, detail;
+    if (yesCount <= 4) {
+      level = "シンプル自計化構成（基本機能中心）";
+      detail = "基本的な自計化ニーズが中心です。FXクラウド標準機能＋最低限の部門管理を前提に検討するとよさそうです。";
+    } else if (yesCount <= 8) {
+      level = "管理会計・部門管理を重視した構成";
+      detail = "部門管理・仕訳自動化・証憑保存など、管理会計寄りのニーズが見られます。FXクラウドの部門管理機能や証憑保存機能を組み合わせた構成が適しています。";
+    } else {
+      level = "グループ管理・内部統制まで意識した高度構成";
+      detail = "グループ会社管理や内部統制・IPO対応まで視野に入るレベルの要件です。グループ会社一元管理や内部統制対応を前提に、ハイエンド構成での検討が必要です。";
+    }
+
+    // カテゴリ別集計
+    const categoryStats = {};
+    questions.forEach(q => {
+      if (!categoryStats[q.category]) {
+        categoryStats[q.category] = { yes: 0, total: 0 };
+      }
+      categoryStats[q.category].total++;
+      if (answers[q.id] === "yes") {
+        categoryStats[q.category].yes++;
+      }
+    });
+
+    let categoryHtml = "<ul>";
+    Object.entries(categoryStats).forEach(([cat, stat]) => {
+      categoryHtml += `<li>${cat}: YES ${stat.yes} / ${stat.total}</li>`;
+    });
+    categoryHtml += "</ul>";
+
+    // オプション推薦
+    const options = [];
+    if (answers["payManagement"] === "yes") {
+      options.push("支払管理機能：入金・支払予定を網羅した支払計画表や、支払データからの銀行振込連携を行います。");
+    }
+    if (answers["payroll"] === "yes") {
+      options.push("給与計算システム：従業員数30名以上・複数事業所等に対応し、賃金配分の見える化と給与事務の合理化を図ります。");
+    }
+    if (answers["reportDesign"] === "yes") {
+      options.push("帳票設計・経営資料ツール：既存Excel帳票を会計データと連動させ、自動更新される経営資料として活用できます。");
+    }
+
+    let optionsHtml;
+    if (options.length) {
+      optionsHtml = '<ul class="option-list">' +
+        options.map(o => `<li>${o}</li>`).join("") +
+        "</ul>";
+    } else {
+      optionsHtml = "<p>支払管理・給与計算・帳票設計などの追加オプションは、必須とまでは言えない結果です。必要に応じて個別に検討してください。</p>";
+    }
+
+    // 回答一覧
+    let answersHtml = `
+      <table class="answers-table">
+        <thead>
+          <tr>
+            <th>カテゴリ</th>
+            <th>質問</th>
+            <th>回答</th>
+            <th>POINT（要件のポイント）</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+    questions.forEach(q => {
+      const a = answers[q.id] || "-";
+      const cls = a === "yes" ? "answer-yes" : (a === "no" ? "answer-no" : "");
+      const label = a === "yes" ? "YES" : (a === "no" ? "NO" : "-");
+      answersHtml += `
+        <tr>
+          <td>${q.category}</td>
+          <td>${q.title}</td>
+          <td class="${cls}">${label}</td>
+          <td>${q.point}</td>
+        </tr>
+      `;
+    });
+    answersHtml += "</tbody></table>";
+
+    document.getElementById("progressBar").style.width = "100%";
+    area.style.display = "none";
+
+    resultArea.innerHTML = `
+      <div class="question-card">
+        <h2>診断結果</h2>
+        <p>
+          <span class="badge">YESの数：${yesCount} / ${total}</span>
+        </p>
+        <div class="summary-grid">
+          <div>
+            <h3>おすすめのFXクラウド構成レベル</h3>
+            <p><strong>${level}</strong></p>
+            <p>${detail}</p>
+            <h3>カテゴリ別の傾向</h3>
+            ${categoryHtml}
+          </div>
+          <div>
+            <h3>おすすめオプション</h3>
+            ${optionsHtml}
+          </div>
+        </div>
+        <h3 style="margin-top:20px;">回答とPOINTの一覧</h3>
+        ${answersHtml}
+        <div class="note">
+          ※ 本ツールの診断ロジックは、FXクラウドシリーズ選定フローチャートの設問構成をもとにした簡易判定です。<br>
+          ※ 実際のシステム選定にあたっては、顧問税理士・TKCの担当者と協議のうえ、個別要件（業種・規模・既存システムとの連携等）を踏まえてご判断ください。<br>
+          ※ 推奨レベルやコメント部分の文言・判定基準は、貴事務所の方針に合わせて自由に書き換えてご利用いただけます。
+        </div>
+      </div>
+    `;
+
+    resultArea.style.display = "block";
+  }
+
+  // 初期表示
+  renderQuestion();
+</script>
+</body>
+</html>

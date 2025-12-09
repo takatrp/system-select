@@ -30,7 +30,7 @@
     .app{
       max-width:900px;
       margin:0 auto;
-      padding:24px 16px 40px;
+      padding:24px 16px 80px; /* 下部に固定ボタンが来るので余白多め */
     }
 
     h1{
@@ -63,8 +63,7 @@
       border-radius:12px;
       box-shadow:0 4px 18px rgba(0,0,0,.05);
       padding:20px 18px 18px;
-      position:relative;           /* YES/NO を絶対配置するため */
-      padding-bottom:72px;         /* ボタン分の余白 */
+      min-height:220px;
     }
 
     .q-number{
@@ -117,13 +116,32 @@
       line-height:1.7;
     }
 
-    .btn-row{
-      position:absolute;   /* カード内で位置固定 */
+    .btn-back{
+      margin-bottom:8px;
+      background:transparent;
+      color:var(--muted);
+      border:1px solid transparent;
+      border-radius:999px;
+      padding:4px 0;
+      font-size:.9rem;
+      cursor:pointer;
+    }
+
+    .btn-back:hover{
+      text-decoration:underline;
+      background:transparent;
+    }
+
+    /* YES/NO 固定フッターバー */
+    .fixed-answer-bar{
+      position:fixed;
       bottom:16px;
-      right:18px;
+      left:50%;
+      transform:translateX(-50%);
       display:flex;
       gap:12px;
       align-items:center;
+      z-index:100;
     }
 
     button{
@@ -160,19 +178,6 @@
       background:#eef3f6;
     }
 
-    .btn-back{
-      margin-bottom:8px;
-      background:transparent;
-      color:var(--muted);
-      border-color:transparent;
-      padding-left:0;
-    }
-
-    .btn-back:hover{
-      text-decoration:underline;
-      background:transparent;
-    }
-
     .result{
       display:none;
       margin-top:12px;
@@ -199,6 +204,7 @@
       grid-template-columns:minmax(0,2fr) minmax(0,3fr);
       gap:16px;
       margin-top:12px;
+      align-items:flex-start;
     }
 
     @media (max-width:720px){
@@ -258,6 +264,11 @@
       color:var(--muted);
       line-height:1.6;
     }
+
+    #categoryRadar{
+      max-width:360px;
+      max-height:360px;
+    }
   </style>
 </head>
 <body>
@@ -276,6 +287,9 @@
 
   <div id="resultArea" class="result"></div>
 </div>
+
+<!-- レーダーチャート用ライブラリ -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
   // 設問・POINT・例文
@@ -418,27 +432,8 @@
       ${q.example ? `<div class="q-example">${q.example}</div>` : ""}
       <div class="point-label">POINT</div>
       <div class="point-box">${q.point}</div>
-      <div class="btn-row">
-        <button type="button" class="btn-yes" data-answer="yes">YES</button>
-        <button type="button" class="btn-no" data-answer="no">NO</button>
-      </div>
     `;
 
-    // YES / NO
-    area.querySelectorAll("[data-answer]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const answer = btn.getAttribute("data-answer");
-        answers[q.id] = answer;
-        currentIndex++;
-        if (currentIndex < total) {
-          renderQuestion();
-        } else {
-          showResult();
-        }
-      });
-    });
-
-    // 戻る
     const backBtn = area.querySelector("#backBtn");
     if (backBtn) {
       backBtn.addEventListener("click", () => {
@@ -446,6 +441,77 @@
         renderQuestion();
       });
     }
+
+    // YES/NO バーは常に表示
+    const answerBar = document.getElementById("answerBar");
+    if (answerBar) answerBar.style.display = "flex";
+  }
+
+  function handleAnswer(answer) {
+    const total = questions.length;
+    if (currentIndex >= total) return; // 結果表示後の誤クリック防止
+
+    const q = questions[currentIndex];
+    answers[q.id] = answer;
+    currentIndex++;
+    if (currentIndex < total) {
+      renderQuestion();
+    } else {
+      showResult();
+    }
+  }
+
+  function createRadarChart(categoryStats) {
+    const canvas = document.getElementById("categoryRadar");
+    if (!canvas || !window.Chart) return;
+
+    const labels = Object.keys(categoryStats);
+    const data = labels.map(label => {
+      const s = categoryStats[label];
+      if (!s || !s.total) return 0;
+      return Math.round((s.yes / s.total) * 100);
+    });
+
+    const ctx = canvas.getContext("2d");
+    new Chart(ctx, {
+      type: 'radar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'YES比率（%）',
+          data: data,
+          fill: true,
+          backgroundColor: 'rgba(87,136,153,0.25)',
+          borderColor: 'rgba(87,136,153,1)',
+          pointBackgroundColor: 'rgba(87,136,153,1)',
+          pointBorderColor: '#fff',
+          pointHoverRadius: 5
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        scales: {
+          r: {
+            suggestedMin: 0,
+            suggestedMax: 100,
+            ticks: {
+              stepSize: 20
+            },
+            angleLines: {
+              color: 'rgba(148,163,184,0.4)'
+            },
+            grid: {
+              color: 'rgba(148,163,184,0.3)'
+            }
+          }
+        }
+      }
+    });
   }
 
   function showResult() {
@@ -483,7 +549,7 @@
       recommendedNote = "下側の「オレンジの四角」に該当し、取引が比較的シンプルで小規模な関与先向けにFXまいスタークラウドを前提とする構成が想定されます。";
     }
 
-    // カテゴリ別集計（参考）
+    // カテゴリ別集計（レーダーチャート用）
     const categoryStats = {};
     questions.forEach(q => {
       if (!categoryStats[q.category]) {
@@ -532,6 +598,10 @@
     document.getElementById("progressBar").style.width = "100%";
     area.style.display = "none";
 
+    // 固定ボタンバーは結果表示時に隠す
+    const answerBar = document.getElementById("answerBar");
+    if (answerBar) answerBar.style.display = "none";
+
     resultArea.innerHTML = `
       <div class="question-card">
         <h2>診断結果</h2>
@@ -551,17 +621,13 @@
             <p><strong>${level}</strong></p>
             <p>${detail}</p>
 
-            <h3>カテゴリ別の傾向（参考）</h3>
+            <h3>カテゴリ別の傾向（数値）</h3>
             ${categoryHtml}
           </div>
 
           <div>
-            <h3>補足コメント</h3>
-            <p style="font-size:.9rem;">
-              ・FX4クラウド：左側の青い四角に対応する、高度な管理会計・部門管理・内部統制を前提とした構成。<br>
-              ・FX2クラウド：左側の緑の四角に対応する、標準的な自計化の中核となる構成。<br>
-              ・FXまいスタークラウド：下側のオレンジの四角に対応する、小規模・シンプルな顧問先向け構成。<br>
-            </p>
+            <h3>カテゴリ別 YES比率（レーダーチャート）</h3>
+            <canvas id="categoryRadar"></canvas>
           </div>
         </div>
 
@@ -576,10 +642,28 @@
     `;
 
     resultArea.style.display = "block";
+
+    // レーダーチャート描画
+    createRadarChart(categoryStats);
   }
 
-  // 初期表示
-  renderQuestion();
+  // YES/NO ボタンのイベント（固定位置）
+  document.addEventListener("DOMContentLoaded", () => {
+    const yesBtn = document.getElementById("btnYes");
+    const noBtn  = document.getElementById("btnNo");
+
+    yesBtn.addEventListener("click", () => handleAnswer("yes"));
+    noBtn.addEventListener("click", () => handleAnswer("no"));
+
+    renderQuestion();
+  });
 </script>
+
+<!-- 固定 YES/NO ボタンバー -->
+<div id="answerBar" class="fixed-answer-bar">
+  <button type="button" class="btn-yes" id="btnYes">YES</button>
+  <button type="button" class="btn-no" id="btnNo">NO</button>
+</div>
+
 </body>
 </html>

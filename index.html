@@ -135,7 +135,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0; /* 画像が潰れないように */
+      flex-shrink: 0;
     }
     .q-image-container img {
       width: 100%;
@@ -157,15 +157,12 @@
       background: #f8f9fa;
       padding: 8px 12px;
       border-radius: 6px;
-      /* 余白を詰めるためマージンを縮小 */
       margin-bottom: 6px; 
       line-height:1.5;
       border-left: 3px solid #cbd5e1;
     }
 
-    /* POINTエリアのラッパー */
     .point-wrapper {
-      /* 以前の margin-top: auto を削除し、固定の余白に */
       margin-top: 6px; 
     }
 
@@ -259,7 +256,6 @@
       font-weight: 600;
     }
 
-    /* 再診断ボタン */
     .btn-again {
       background:#fff;
       color:var(--muted);
@@ -270,7 +266,6 @@
       color: var(--ink);
     }
 
-    /* 印刷ボタン（トンマナを合わせる） */
     .btn-print {
       background: #fff;
       color: var(--accent-dark);
@@ -454,9 +449,11 @@
       line-height:1.6;
     }
 
-    #categoryBar{
-      max-width:100%;
-      height: auto;
+    /* グラフコンテナ：重要 */
+    .chart-container {
+      position: relative;
+      width: 100%;
+      height: 300px;
     }
 
     /* --- 印刷用スタイル --- */
@@ -495,7 +492,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-  // 設問データ（画像URLを追加）
+  // 設問データ
   const questions = [
     {
       id: "accountsStructure",
@@ -659,7 +656,6 @@
           <span class="q-title">${q.title}</span>
         </div>
 
-        <!-- 画像表示エリア -->
         ${imageHtml}
 
         <div class="q-text">${q.question}</div>
@@ -703,6 +699,7 @@
   }
 
   function createCategoryBarChart(categoryStats) {
+    // グラフを描画するcanvas要素を取得
     const canvas = document.getElementById("categoryBar");
     if (!canvas || !window.Chart) return;
 
@@ -719,6 +716,7 @@
       categoryChartInstance.destroy();
     }
 
+    // Chart.jsの設定
     categoryChartInstance = new Chart(ctx, {
       type: 'bar',
       data: {
@@ -732,8 +730,9 @@
         }]
       },
       options: {
-        indexAxis: 'y',
+        indexAxis: 'y', // 横棒グラフ
         responsive: true,
+        maintainAspectRatio: false, // コンテナの高さを維持して描画
         plugins: {
           legend: { display: false },
           tooltip: {
@@ -767,7 +766,7 @@
 
     let recommendedSystem = "";
     let recommendedNote = "";
-    let recommendedUrl = ""; // URL用変数
+    let recommendedUrl = "";
     let level = "";
     let detail = "";
 
@@ -873,7 +872,10 @@
 
           <div>
             <h3>カテゴリ別 YES比率</h3>
-            <canvas id="categoryBar"></canvas>
+            <!-- 重要：グラフのコンテナ -->
+            <div class="chart-container">
+              <canvas id="categoryBar"></canvas>
+            </div>
           </div>
         </div>
 
@@ -889,6 +891,7 @@
 
     resultArea.style.display = "block";
 
+    // グラフ生成
     createCategoryBarChart(categoryStats);
 
     const retryBtn = document.getElementById("btnRetry");

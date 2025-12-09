@@ -16,6 +16,7 @@
       --accent-dark:#476a7c;
       --accent-soft:rgba(87,136,153,.08);
       --border:#dde5ea;
+      --highlight-bg:#eef6f9;
     }
 
     *{box-sizing:border-box;}
@@ -36,6 +37,7 @@
     h1{
       font-size:1.6rem;
       margin:0 0 .3rem;
+      color: var(--accent-dark);
     }
 
     p{
@@ -58,77 +60,115 @@
       transition:width .25s ease;
     }
 
+    /* --- カードデザイン --- */
     .question-card{
       background:var(--card);
       border-radius:12px;
       box-shadow:0 4px 18px rgba(0,0,0,.05);
-      padding:16px 18px 14px;
+      padding:20px 24px;
       display:flex;
       flex-direction:column;
-      height:380px;           /* 高さ固定：YES/NO の位置を固定 */
+      /* 画像が入るため高さを拡張 */
+      height:620px; 
+      position: relative;
     }
 
     .q-header-row{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      margin-bottom:6px;
+      margin-bottom:10px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
     }
 
     .q-number{
       font-size:.85rem;
       color:var(--muted);
-      margin-bottom:2px;
+      font-weight: bold;
+    }
+
+    .q-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
     }
 
     .q-title{
       font-weight:600;
-      font-size:1.02rem;
+      font-size:0.9rem; 
+      color: var(--muted);
       margin:0;
     }
 
     .q-category{
       display:inline-block;
-      font-size:.8rem;
+      font-size:.75rem;
       padding:2px 8px;
-      border-radius:999px;
-      background:#eef3f6;
+      border-radius:4px;
+      background:var(--accent-soft);
       color:var(--accent-dark);
-      margin-left:8px;
+      font-weight: 600;
     }
 
     .q-main{
-      flex:1 1 auto;
+      flex:1;
       overflow-y:auto;
       padding-right:4px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* --- 画像スタイル --- */
+    .q-image-container {
+      width: 100%;
+      height: 160px; /* 高さを固定してレイアウト崩れを防ぐ */
+      margin-bottom: 12px;
+      border-radius: 8px;
+      overflow: hidden;
+      background-color: var(--highlight-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .q-image-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .q-text{
-      margin:6px 0 4px;
-      line-height:1.7;
+      margin:4px 0 12px;
+      line-height:1.5;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--ink);
     }
 
     .q-example{
       font-size:.85rem;
       color:var(--muted);
-      margin-bottom:8px;
-      line-height:1.6;
+      background: #f8f9fa;
+      padding: 8px 12px;
+      border-radius: 6px;
+      margin-bottom:12px;
+      line-height:1.5;
+      border-left: 3px solid #cbd5e1;
     }
 
     .point-label{
-      font-size:.8rem;
-      font-weight:600;
-      color:var(--accent-dark);
-      letter-spacing:.04em;
+      font-size:.75rem;
+      font-weight:700;
+      color:var(--accent);
+      letter-spacing:.05em;
+      margin-bottom: 4px;
     }
 
     .point-box{
-      margin-top:4px;
-      padding:10px 12px;
-      border-left:3px solid var(--accent);
-      background:var(--accent-soft);
       font-size:.9rem;
-      line-height:1.7;
+      line-height:1.6;
+      color: var(--ink);
     }
 
     .btn-back{
@@ -141,123 +181,207 @@
       cursor:pointer;
       white-space:nowrap;
     }
-
     .btn-back:hover{
       text-decoration:underline;
-      background:transparent;
     }
 
+    /* --- ボタンエリア --- */
     .btn-row{
       flex:0 0 auto;
-      margin-top:10px;
+      margin-top:auto;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
       display:flex;
       justify-content:flex-end;
-      gap:12px;
+      gap:16px;
     }
 
     button{
       border-radius:999px;
       border:1px solid transparent;
-      padding:8px 18px;
-      font-size:.95rem;
+      padding:10px 24px;
+      font-size:1rem;
+      font-weight: 600;
       cursor:pointer;
       font-family:inherit;
       background:#fff;
-      transition:background .15s ease,border-color .15s ease,color .15s ease,transform .05s ease;
+      transition:all .2s ease;
     }
 
     button:active{
-      transform:translateY(1px);
+      transform:translateY(2px);
     }
 
     .btn-yes{
       background:var(--accent);
       color:#fff;
+      box-shadow: 0 4px 10px rgba(87,136,153,0.3);
     }
-
     .btn-yes:hover{
       background:var(--accent-dark);
+      box-shadow: 0 6px 14px rgba(87,136,153,0.4);
     }
 
     .btn-no{
       background:#fff;
       color:var(--accent);
-      border-color:var(--accent);
+      border: 1px solid var(--accent);
     }
-
     .btn-no:hover{
-      background:#eef3f6;
+      background:var(--accent-soft);
     }
 
     .btn-again{
       background:#fff;
       color:var(--accent-dark);
-      border-color:var(--accent);
+      border:1px solid var(--border);
       font-size:.9rem;
-      margin-bottom:8px;
+      padding: 6px 16px;
+      margin-bottom:16px;
     }
-
     .btn-again:hover{
       background:#eef3f6;
+      border-color: var(--accent);
     }
 
+    /* --- 結果画面デザイン --- */
     .result{
       display:none;
       margin-top:12px;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-card {
+      height: auto; 
     }
 
     .result h2{
       margin-top:0;
       margin-bottom:.5rem;
+      font-size: 1.4rem;
+      color: var(--accent-dark);
+      border-bottom: 2px solid var(--accent-soft);
+      padding-bottom: 8px;
     }
 
     .badge{
       display:inline-block;
-      padding:4px 10px;
-      font-size:.8rem;
+      padding:4px 12px;
+      font-size:.9rem;
+      font-weight: bold;
       border-radius:999px;
-      background:#eef3f6;
+      background:var(--accent-soft);
       color:var(--accent-dark);
-      margin-right:4px;
-      margin-bottom:4px;
+    }
+
+    .recommend-box {
+      text-align: center;
+      background: linear-gradient(135deg, #ffffff 0%, #f4f9fb 100%);
+      border: 2px solid var(--accent);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 20px 0;
+      box-shadow: 0 8px 24px rgba(87, 136, 153, 0.15);
+    }
+
+    .recommend-label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+      display: block;
+      font-weight: bold;
+    }
+
+    .recommend-name {
+      display: block;
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--accent-dark);
+      letter-spacing: 0.05em;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    /* 追加：詳細リンクボタン */
+    .recommend-link {
+      display: inline-block;
+      text-decoration: none;
+      background: var(--accent-dark);
+      color: #fff;
+      padding: 8px 24px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+    .recommend-link:hover {
+      background: var(--accent);
+    }
+    .recommend-link::after {
+      content: " >";
+      margin-left: 6px;
     }
 
     .summary-grid{
       display:grid;
       grid-template-columns:minmax(0,2fr) minmax(0,3fr);
-      gap:16px;
-      margin-top:12px;
+      gap:24px;
+      margin-top:24px;
       align-items:flex-start;
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
     }
 
     @media (max-width:720px){
       .summary-grid{
         grid-template-columns:1fr;
       }
+      .question-card {
+        /* モバイル用にさらに高さを確保 */
+        height: 680px; 
+        padding: 16px;
+      }
+      .q-text {
+        font-size: 1.2rem;
+      }
+      .recommend-name {
+        font-size: 1.8rem;
+      }
     }
 
     .summary-grid h3{
-      margin:.8rem 0 .3rem;
-      font-size:1rem;
+      margin:0 0 12px;
+      font-size:1.1rem;
+      color: var(--accent-dark);
     }
 
     .summary-grid ul{
-      margin:.25rem 0 .25rem 1.1rem;
-      padding:0;
-      font-size:.9rem;
+      margin:0;
+      padding:0 0 0 1.2rem;
+      font-size:.95rem;
+      color: var(--ink);
+    }
+    .summary-grid li {
+      margin-bottom: 6px;
     }
 
     .answers-table{
       width:100%;
       border-collapse:collapse;
       font-size:.9rem;
-      margin-top:16px;
+      margin-top:24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
     }
 
     .answers-table th,
     .answers-table td{
       border:1px solid var(--border);
-      padding:6px 8px;
+      padding:10px 12px;
       vertical-align:top;
     }
 
@@ -265,32 +389,36 @@
       background:#f3f6f8;
       text-align:left;
       font-weight:600;
-    }
-
-    .answers-table td:nth-child(1){
-      white-space:nowrap;
+      color: var(--accent-dark);
+      white-space: nowrap;
     }
 
     .answer-yes{
       color:#00695c;
-      font-weight:600;
+      font-weight:bold;
+      background: rgba(0, 105, 92, 0.05);
+      text-align: center;
     }
 
     .answer-no{
       color:#b71c1c;
-      font-weight:600;
+      font-weight:bold;
+      text-align: center;
     }
 
     .note{
-      margin-top:12px;
+      margin-top:20px;
+      padding: 16px;
+      background: #fafafa;
+      border-radius: 8px;
       font-size:.8rem;
       color:var(--muted);
       line-height:1.6;
     }
 
     #categoryBar{
-      max-width:420px;
-      max-height:320px;
+      max-width:100%;
+      height: auto;
     }
   </style>
 </head>
@@ -298,8 +426,7 @@
 <div class="app">
   <h1>FXクラウドシリーズ 選定フローチャート簡易診断</h1>
   <p>
-    関与先の自計化ニーズについて、YES／NOを選ぶだけでおすすめの構成とポイントを整理します。<br>
-    （「FXクラウドシリーズ選定フローチャート（自計化提案打ち合わせシート）」をベースにした簡易ツール）
+    関与先の自計化ニーズについて、YES／NOを選ぶだけでおすすめの構成とポイントを整理します。
   </p>
 
   <div class="progress">
@@ -315,111 +442,125 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-  // 設問・POINT・例文
+  // 設問データ（画像URLを追加）
+  // 実際には placehold.co を使用してダミー画像を表示しています。
   const questions = [
     {
       id: "accountsStructure",
       title: "１．勘定科目体系",
       category: "会計・管理会計",
-      question: "勘定科目（売上高、仕入高、販管費等）を自由に設計したい",
+      question: "勘定科目（売上高、仕入高、販管費等）を自由に設計したいですか？",
       point: "財務三表科目とは異なる勘定科目（コード）での設計および追加、並べ替えができます。また、複数の科目残高を合算する「小計科目」の登録、貸借対照表科目の部門別残高管理もできます。",
-      example: "例:売上・仕入科目数を4つ以上設定する"
+      example: "例:売上・仕入科目数を4つ以上設定する",
+      image: "https://placehold.co/600x200/eef3f6/578899?text=Account+Structure"
     },
     {
       id: "subAccount",
       title: "２．同一科目の取引先別、口座別管理併用",
       category: "会計・管理会計",
-      question: "勘定科目ごとに複数（口座別・取引先別等）の残高管理がしたい",
+      question: "勘定科目ごとに複数（口座別・取引先別等）の残高管理がしたいですか？",
       point: "１つの勘定科目に対して取引先別＋口座別等の併用管理ができます。例えば、預り金を取引先（社員A〜、取引先A〜）＋口座別（源泉所得税、社会保険料等）のような運用が可能です。",
-      example: "例:各月の売上を取引先毎と商品カテゴリー毎を同時に残高管理する"
+      example: "例:各月の売上を取引先毎と商品カテゴリー毎を同時に残高管理する",
+      image: "https://placehold.co/600x200/eef3f6/578899?text=Multi+Balance+Check"
     },
     {
       id: "deptPerformance",
       title: "３．部門業績管理",
       category: "部門管理",
-      question: "部門を階層別・グループ別に管理したい",
+      question: "部門を階層別・グループ別に管理したいですか？",
       point: "部門階層構造を多段階で設計できます。また、部門階層とは異なる視点での部門業績を確認するための部門グループ設計もできます。",
-      example: "例:地域毎・店舗毎・担当者毎の業績管理<br>債権債務の取引先別残高を部門ごとに管理、本支店会計を部門で行う"
+      example: "例:地域毎・店舗毎・担当者毎の業績管理<br>債権債務の取引先別残高を部門ごとに管理、本支店会計を部門で行う",
+      image: "https://placehold.co/600x200/eef3f6/578899?text=Department+Management"
     },
     {
       id: "deptPermission",
       title: "４．部門参照（入力）権限",
       category: "部門管理・統制",
-      question: "経理担当者ごとに参照可能部門を制限したい",
+      question: "経理担当者ごとに参照可能部門を制限したいですか？",
       point: "経理担当者ごとに特定の部門のみ入力・業績閲覧を可とする参照権限を設定できます。また、経理担当者ごとに利用可能なメニューの制限もできます。",
-      example: "例:自部門のデータのみ閲覧・入力できるように制限する"
+      example: "例:自部門のデータのみ閲覧・入力できるように制限する",
+      image: "https://placehold.co/600x200/eef3f6/578899?text=Access+Control"
     },
     {
       id: "voucherWorkflow",
       title: "５．証憑保存",
       category: "証憑保存・内部統制",
-      question: "証憑保存機能を経理担当以外でも利用したい",
+      question: "証憑保存機能を経理担当以外でも利用したいですか？",
       point: "オプション「インボイス・マネジャー（FX4クラウド）」は、FX4クラウド未登録のパソコンから証憑を保存できます。また、多段階承認機能を活用した経費申請〜上長の承認〜経理担当の承認〜保存＆仕訳計上もできます。",
-      example: "例:各部門や支店のパソコンから証憑を保存する"
+      example: "例:各部門や支店のパソコンから証憑を保存する",
+      image: "https://placehold.co/600x200/eef3f6/578899?text=Voucher+Storage"
     },
     {
       id: "excelJournal",
       title: "６．Excelからの仕訳計上",
       category: "仕訳自動化",
-      question: "Excel集計表等から仕訳を計上したい",
+      question: "Excel集計表等から仕訳を計上したいですか？",
       point: "Excel作成の日報や出納帳からFX4クラウドを起動させることなく仕訳を計上できます。また、MR設計ツールと併用した運用（部門共通費の部門配賦等）もできます。",
-      example: "企業がExcelで作成している日報や出納帳から仕訳を計上する"
+      example: "例:企業がExcelで作成している日報や出納帳から仕訳を計上する",
+      image: "https://placehold.co/600x200/eef3f6/578899?text=Excel+Import"
     },
     {
       id: "systemJournal",
       title: "７．業務システムデータからの仕訳計上",
       category: "仕訳自動化",
-      question: "業務システムのデータから仕訳を計上したい",
+      question: "業務システムのデータから仕訳を計上したいですか？",
       point: "仕訳読込テンプレート設計機能により、業務システムの出力データを加工することなく仕訳を計上できます。細かな単位の仕訳を手間なく計上することで、FX4クラウドを活用した詳細な財務分析が可能です。",
-      example: "販売管理システムの出力データから売上・入金仕訳を計上する"
+      example: "例:販売管理システムの出力データから売上・入金仕訳を計上する",
+      image: "https://placehold.co/600x200/eef3f6/578899?text=System+Linkage"
     },
     {
       id: "groupManagement",
       title: "８．企業グループ業績管理",
       category: "グループ管理",
-      question: "グループ会社全体の業績を一元管理したい",
+      question: "グループ会社全体の業績を一元管理したいですか？",
       point: "グループ会社でFX4クラウドを利用することで、内部取引を相殺したグループ業績管理ができます。また、仕訳入力や証憑保存方法など、グループ全体の経理処理を統一することもできます。",
-      example: "グループ全体業績をタイムリーかつ効率的に管理する"
+      example: "例:グループ全体業績をタイムリーかつ効率的に管理する",
+      image: "https://placehold.co/600x200/eef3f6/578899?text=Group+Management"
     },
     {
       id: "ipoControl",
       title: "９．株式上場",
       category: "内部統制・IPO",
-      question: "株式上場（IPO）している／視野に入れている",
+      question: "株式上場（IPO）している、または視野に入れていますか？",
       point: "IT全般統制・IT業務処理統制の対応等により、内部統制等への対応が求められる上場企業でも利用いただけます。なお、「受託業務に係る内部統制の保証報告書」（3402監査報告書）を無償で提供しています。",
-      example: ""
+      example: "",
+      image: "https://placehold.co/600x200/eef3f6/578899?text=IPO+Support"
     },
     {
       id: "deptPermissionFx2",
       title: "１０．部門参照（入力）権限（FX2等）",
       category: "部門管理・統制",
-      question: "部門業績を管理したい、利用メニューを制限したい",
+      question: "部門業績を管理したい、または利用メニューを制限したいですか？",
       point: "部門別（多段階で登録する場合はFX4クラウド）での業績管理ができます。また、経理担当者ごとに利用可能なメニューの制限もできます。",
-      example: "※部門別の業績管理が可能です。"
+      example: "※部門別の業績管理が可能です。",
+      image: "https://placehold.co/600x200/eef3f6/578899?text=Dept+Management"
     },
     {
       id: "payManagement",
       title: "１１．支払管理機能",
       category: "オプション：支払管理",
-      question: "支払をシステムで管理したい、支払データの作成まで行いたい",
+      question: "支払をシステムで管理したい、または支払データの作成まで行いたいですか？",
       point: "売掛金の回収、買掛金の支払い、借入金の返済、手形の決済予定等の様々な入金・支払予定を網羅した「資金繰り計画用」を作成できます。",
-      example: "例:仕入仕訳を元に支払予定をカレンダー形式で管理、銀行振込データを作成"
+      example: "例:仕入仕訳を元に支払予定をカレンダー形式で管理、銀行振込データを作成",
+      image: "https://placehold.co/600x200/eef3f6/578899?text=Payment+Management"
     },
     {
       id: "payroll",
       title: "１２．給与計算機能",
       category: "オプション：給与計算",
-      question: "給与計算をする社員数が30人以上、または複数事業所か否か",
+      question: "給与計算をする社員数が30人以上、または複数事業所ですか？",
       point: "経営者による賃金の適正な配分の決定と給与事務の合理化を支援します。",
-      example: "※FXまいスタークラウドの場合、30人までしか給与計算が行えません。"
+      example: "※FXまいスタークラウドの場合、30人までしか給与計算が行えません。",
+      image: "https://placehold.co/600x200/eef3f6/578899?text=Payroll+System"
     },
     {
       id: "reportDesign",
       title: "１３．MR設計ツール",
       category: "オプション：帳票設計・経営資料",
-      question: "関与先が独自の資料を作成されている場合に効率化が可能",
+      question: "関与先が独自の資料を作成されている場合に効率化が可能ですか？",
       point: "マネジメントレポート（MR）設計ツールにより、FXクラウドシリーズのデータを活用したオリジナル帳表がExcelで簡単に作成できます。",
-      example: "例:ExcelからFXクラウドシリーズのデータにアクセスし、データを自動で取得"
+      example: "例:ExcelからFXクラウドシリーズのデータにアクセスし、データを自動で取得",
+      image: "https://placehold.co/600x200/eef3f6/578899?text=Report+Design"
     }
   ];
 
@@ -440,10 +581,15 @@
     const area = document.getElementById("questionArea");
     const resultArea = document.getElementById("resultArea");
 
-    area.style.display = "block";
+    area.style.display = "flex"; 
     resultArea.style.display = "none";
 
     updateProgress();
+
+    // 画像があれば表示する
+    const imageHtml = q.image 
+      ? `<div class="q-image-container"><img src="${q.image}" alt="${q.title}のイメージ"></div>`
+      : "";
 
     area.innerHTML = `
       <div class="q-header-row">
@@ -451,26 +597,36 @@
           ${currentIndex > 0 ? '<button type="button" class="btn-back" id="backBtn">← 戻る</button>' : ""}
         </div>
         <div style="text-align:right;">
-          <div class="q-number">質問 ${currentIndex + 1} / ${total}</div>
+          <div class="q-number">Q. ${currentIndex + 1} / ${total}</div>
         </div>
       </div>
+      
       <div class="q-main">
-        <div>
-          <span class="q-title">${q.title}</span>
+        <div class="q-title-row">
           <span class="q-category">${q.category}</span>
+          <span class="q-title">${q.title}</span>
         </div>
+
+        <!-- 画像表示エリア -->
+        ${imageHtml}
+
         <div class="q-text">${q.question}</div>
+        
         ${q.example ? `<div class="q-example">${q.example}</div>` : ""}
-        <div class="point-label">POINT</div>
-        <div class="point-box">${q.point}</div>
+        
+        <div style="margin-top:auto;">
+          <div class="point-label">POINT</div>
+          <div class="point-box">${q.point}</div>
+        </div>
       </div>
+
       <div class="btn-row">
-        <button type="button" class="btn-yes" data-answer="yes">YES</button>
         <button type="button" class="btn-no" data-answer="no">NO</button>
+        <button type="button" class="btn-yes" data-answer="yes">YES</button>
       </div>
     `;
 
-    // YES/NO
+    // YES/NO Logic
     area.querySelectorAll("[data-answer]").forEach(btn => {
       btn.addEventListener("click", () => {
         const answer = btn.getAttribute("data-answer");
@@ -484,7 +640,7 @@
       });
     });
 
-    // 戻る
+    // 戻るボタン
     const backBtn = area.querySelector("#backBtn");
     if (backBtn) {
       backBtn.addEventListener("click", () => {
@@ -516,20 +672,18 @@
       data: {
         labels: labels,
         datasets: [{
-          label: 'YES比率（%）',
+          label: 'YES率',
           data: data,
-          borderWidth: 1,
-          backgroundColor: 'rgba(87,136,153,0.4)',
-          borderColor: 'rgba(87,136,153,1)'
+          borderWidth: 0,
+          borderRadius: 4,
+          backgroundColor: '#578899',
         }]
       },
       options: {
         indexAxis: 'y',
         responsive: true,
         plugins: {
-          legend: {
-            display: false
-          },
+          legend: { display: false },
           tooltip: {
             callbacks: {
               label: function(context) {
@@ -542,9 +696,7 @@
           x: {
             suggestedMin: 0,
             suggestedMax: 100,
-            ticks: {
-              stepSize: 20
-            }
+            ticks: { stepSize: 20 }
           }
         }
       }
@@ -557,36 +709,37 @@
     const total = questions.length;
     const yesCount = questions.filter(q => answers[q.id] === "yes").length;
 
-    // ロジック：
-    // ・1〜9まででYESがあれば FX4クラウド
-    // ・それがなく、10〜13でYESがあれば FX2クラウド
-    // ・1〜13すべてNOなら FXまいスタークラウド
+    // 判定ロジック
     const yesFirstBlock = questions.slice(0, 9).some(q => answers[q.id] === "yes");
     const yesSecondBlock = questions.slice(9, 13).some(q => answers[q.id] === "yes");
 
     let recommendedSystem = "";
     let recommendedNote = "";
+    let recommendedUrl = ""; // URL用変数
     let level = "";
     let detail = "";
 
     if (yesFirstBlock) {
       recommendedSystem = "FX4クラウド";
+      recommendedUrl = "https://www.tkc.jp/fx4/";
       level = "グループ管理・内部統制まで意識した高度構成";
-      detail = "1〜9の設問でニーズがあるため、高度な管理会計・部門管理・内部統制を前提とした構成が望ましいと考えられます。";
-      recommendedNote = "左側の「青い四角」に該当し、部門管理・グループ管理・ワークフローまで含めた構成としてFX4クラウドを中核に検討する想定です。";
+      detail = "前半の設問（高度管理・統制）でニーズがあるため、FX4クラウドを中核とした構成が望ましいと考えられます。";
+      recommendedNote = "部門管理・グループ管理・ワークフローまで含めた包括的な提案が可能です。";
     } else if (yesSecondBlock) {
       recommendedSystem = "FX2クラウド";
+      recommendedUrl = "https://www.tkc.jp/fx/";
       level = "管理会計・オプション機能を備えた標準構成";
-      detail = "10〜13の設問でニーズがありつつ、1〜9には該当しないため、標準的な自計化＋必要なオプションを付加した構成が適していると考えられます。";
-      recommendedNote = "左側の「緑の四角」に該当し、FX2クラウドを中心に、必要に応じて支払管理や給与計算、帳票設計などのオプションを組み合わせる想定です。";
+      detail = "標準的な自計化ニーズに加え、支払管理や給与等の特定オプションが必要な構成です。";
+      recommendedNote = "FX2クラウドを中心に、必要に応じて支払管理や給与計算、帳票設計などのオプションを組み合わせましょう。";
     } else {
       recommendedSystem = "FXまいスタークラウド";
+      recommendedUrl = "https://www.tkc.jp/fx/";
       level = "シンプル自計化構成（小規模向け）";
-      detail = "1〜13の設問すべてでNOとなっているため、高度な部門管理・グループ管理・内部統制までは現時点では不要と考えられます。";
-      recommendedNote = "下側の「オレンジの四角」に該当し、取引が比較的シンプルで小規模な関与先向けにFXまいスタークラウドを前提とする構成が想定されます。";
+      detail = "高度な部門管理等は不要なため、まずはシンプルな自計化導入が適しています。";
+      recommendedNote = "取引が比較的シンプルで小規模な関与先向けに、FXまいスタークラウドを前提とした構成が推奨されます。";
     }
 
-    // カテゴリ別集計（グラフ用）
+    // カテゴリ集計
     const categoryStats = {};
     questions.forEach(q => {
       if (!categoryStats[q.category]) {
@@ -600,11 +753,11 @@
 
     let categoryHtml = "<ul>";
     Object.entries(categoryStats).forEach(([cat, stat]) => {
-      categoryHtml += `<li>${cat}: YES ${stat.yes} / ${stat.total}</li>`;
+      categoryHtml += `<li>${cat}: <strong>${stat.yes}</strong> / ${stat.total}</li>`;
     });
     categoryHtml += "</ul>";
 
-    // 回答一覧テーブル
+    // 回答一覧生成
     let answersHtml = `
       <table class="answers-table">
         <thead>
@@ -612,7 +765,7 @@
             <th>項目</th>
             <th>質問</th>
             <th>回答</th>
-            <th>POINT（要件のポイント）</th>
+            <th>POINT</th>
           </tr>
         </thead>
         <tbody>
@@ -636,37 +789,40 @@
     area.style.display = "none";
 
     resultArea.innerHTML = `
-      <div class="question-card">
-        <button type="button" class="btn-again" id="btnRetry">再度診断する</button>
+      <div class="question-card result-card">
+        <button type="button" class="btn-again" id="btnRetry">↺ はじめからやり直す</button>
 
         <h2>診断結果</h2>
         <p>
-          <span class="badge">YESの数：${yesCount} / ${total}</span>
+          <span class="badge">YES数：${yesCount} / ${total}</span>
         </p>
 
-        <h3>おすすめのシステム</h3>
-        <p>
-          今回の回答からの<strong>おすすめのシステムは「${recommendedSystem}」です。</strong>
-        </p>
-        <p>${recommendedNote}</p>
+        <!-- おすすめツール名の強調表示 + リンク -->
+        <div class="recommend-box">
+          <span class="recommend-label">おすすめのシステム</span>
+          <span class="recommend-name">${recommendedSystem}</span>
+          <a href="${recommendedUrl}" target="_blank" class="recommend-link">詳しくはこちら</a>
+        </div>
+
+        <p style="text-align:center; margin-bottom:20px;">${recommendedNote}</p>
 
         <div class="summary-grid">
           <div>
             <h3>推奨レベル（全体像）</h3>
             <p><strong>${level}</strong></p>
-            <p>${detail}</p>
+            <p style="font-size:0.9rem; color:var(--muted);">${detail}</p>
 
-            <h3>カテゴリ別の傾向（数値）</h3>
+            <h3 style="margin-top:20px;">カテゴリ別の傾向</h3>
             ${categoryHtml}
           </div>
 
           <div>
-            <h3>カテゴリ別 YES比率（横棒グラフ）</h3>
+            <h3>カテゴリ別 YES比率</h3>
             <canvas id="categoryBar"></canvas>
           </div>
         </div>
 
-        <h3 style="margin-top:20px;">回答とPOINTの一覧</h3>
+        <h3 style="margin-top:30px; color:var(--accent-dark);">回答詳細一覧</h3>
         ${answersHtml}
 
         <div class="note">
@@ -678,14 +834,11 @@
 
     resultArea.style.display = "block";
 
-    // グラフ描画
     createCategoryBarChart(categoryStats);
 
-    // 再診断ボタン
     const retryBtn = document.getElementById("btnRetry");
     if (retryBtn) {
       retryBtn.addEventListener("click", () => {
-        // 回答をクリアして最初から
         Object.keys(answers).forEach(k => delete answers[k]);
         currentIndex = 0;
         document.getElementById("progressBar").style.width = "0%";
@@ -695,7 +848,6 @@
     }
   }
 
-  // 初期表示
   document.addEventListener("DOMContentLoaded", () => {
     renderQuestion();
   });

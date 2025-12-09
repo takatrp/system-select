@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>FXクラウドシリーズ 選定フローチャート簡易診断</title>
-  <meta name="description" content="FXクラウドシリーズの自計化構成を、YES／NOで簡単に診断できるチェックツールです。">
+  <title>FXクラウドシリーズ 導入診断チャート</title>
+  <meta name="description" content="貴社に最適なFXクラウドシリーズの構成を、YES／NOで簡単に診断できるチェックツールです。">
 
   <style>
     :root{
@@ -45,6 +45,11 @@
       margin:.25rem 0 .5rem;
     }
 
+    .intro-text {
+      color: var(--ink);
+      margin-bottom: 20px;
+    }
+
     .progress{
       margin:16px 0 20px;
       height:8px;
@@ -68,7 +73,7 @@
       padding:20px 24px;
       display:flex;
       flex-direction:column;
-      /* 画像が入るため高さを拡張 */
+      /* 画像が入るため高さを確保 */
       height:620px; 
       position: relative;
     }
@@ -231,17 +236,33 @@
       background:var(--accent-soft);
     }
 
+    /* --- 結果画面アクション --- */
+    .result-actions {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
     .btn-again{
       background:#fff;
       color:var(--accent-dark);
       border:1px solid var(--border);
       font-size:.9rem;
       padding: 6px 16px;
-      margin-bottom:16px;
     }
     .btn-again:hover{
       background:#eef3f6;
       border-color: var(--accent);
+    }
+
+    .btn-print {
+      background: var(--ink);
+      color: #fff;
+      font-size: .9rem;
+      padding: 6px 16px;
+    }
+    .btn-print:hover {
+      background: #3a4b4e;
     }
 
     /* --- 結果画面デザイン --- */
@@ -287,6 +308,7 @@
       padding: 24px;
       margin: 20px 0;
       box-shadow: 0 8px 24px rgba(87, 136, 153, 0.15);
+      page-break-inside: avoid; /* 印刷時に途中で切れないように */
     }
 
     .recommend-label {
@@ -307,7 +329,6 @@
       margin-bottom: 16px;
     }
 
-    /* 追加：詳細リンクボタン */
     .recommend-link {
       display: inline-block;
       text-decoration: none;
@@ -342,7 +363,6 @@
         grid-template-columns:1fr;
       }
       .question-card {
-        /* モバイル用にさらに高さを確保 */
         height: 680px; 
         padding: 16px;
       }
@@ -420,13 +440,29 @@
       max-width:100%;
       height: auto;
     }
+
+    /* --- 印刷用スタイル --- */
+    @media print {
+      body { background: #fff; color: #000; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
+      .app { max-width: 100%; margin: 0; padding: 0; }
+      .progress, .btn-row, .btn-back, .result-actions, .recommend-link { display: none !important; }
+      .question-card { box-shadow: none; border: none; padding: 0; height: auto; }
+      .recommend-box { border: 1px solid #000; box-shadow: none; background: #fff; }
+      .answers-table th { background: #eee !important; color: #000; }
+      .answer-yes { color: #000; font-weight: bold; }
+      .answer-no { color: #666; }
+      h1 { font-size: 1.4rem; color: #000; }
+      p, li, td { color: #000; }
+      .note { border: 1px solid #ddd; background: #fff; color: #444; }
+      /* グラフは印刷環境によっては表示されない場合がありますが、Canvas自体は保持します */
+    }
   </style>
 </head>
 <body>
 <div class="app">
-  <h1>FXクラウドシリーズ 選定フローチャート簡易診断</h1>
-  <p>
-    関与先の自計化ニーズについて、YES／NOを選ぶだけでおすすめの構成とポイントを整理します。
+  <h1>FXクラウドシリーズ 導入診断チャート</h1>
+  <p class="intro-text">
+    貴社の経理体制やご要望について、YES／NOを選ぶだけで最適な「FXクラウドシリーズ」の構成をご提案します。
   </p>
 
   <div class="progress">
@@ -443,7 +479,6 @@
 
 <script>
   // 設問データ（画像URLを追加）
-  // 実際には placehold.co を使用してダミー画像を表示しています。
   const questions = [
     {
       id: "accountsStructure",
@@ -557,7 +592,8 @@
       id: "reportDesign",
       title: "１３．MR設計ツール",
       category: "オプション：帳票設計・経営資料",
-      question: "関与先が独自の資料を作成されている場合に効率化が可能ですか？",
+      /* ↓ 指定通り変更 */
+      question: "科目残高を反映した経営管理用レポートを独自に作成していますか？",
       point: "マネジメントレポート（MR）設計ツールにより、FXクラウドシリーズのデータを活用したオリジナル帳表がExcelで簡単に作成できます。",
       example: "例:ExcelからFXクラウドシリーズのデータにアクセスし、データを自動で取得",
       image: "https://placehold.co/600x200/eef3f6/578899?text=Report+Design"
@@ -724,19 +760,19 @@
       recommendedUrl = "https://www.tkc.jp/fx4/";
       level = "グループ管理・内部統制まで意識した高度構成";
       detail = "前半の設問（高度管理・統制）でニーズがあるため、FX4クラウドを中核とした構成が望ましいと考えられます。";
-      recommendedNote = "部門管理・グループ管理・ワークフローまで含めた包括的な提案が可能です。";
+      recommendedNote = "部門管理・グループ管理・ワークフローまで含めた包括的な対応が可能です。";
     } else if (yesSecondBlock) {
       recommendedSystem = "FX2クラウド";
       recommendedUrl = "https://www.tkc.jp/fx/";
       level = "管理会計・オプション機能を備えた標準構成";
       detail = "標準的な自計化ニーズに加え、支払管理や給与等の特定オプションが必要な構成です。";
-      recommendedNote = "FX2クラウドを中心に、必要に応じて支払管理や給与計算、帳票設計などのオプションを組み合わせましょう。";
+      recommendedNote = "FX2クラウドを中心に、必要に応じて支払管理や給与計算、帳票設計などのオプションを組み合わせる形が推奨されます。";
     } else {
       recommendedSystem = "FXまいスタークラウド";
       recommendedUrl = "https://www.tkc.jp/fx/";
       level = "シンプル自計化構成（小規模向け）";
       detail = "高度な部門管理等は不要なため、まずはシンプルな自計化導入が適しています。";
-      recommendedNote = "取引が比較的シンプルで小規模な関与先向けに、FXまいスタークラウドを前提とした構成が推奨されます。";
+      recommendedNote = "取引が比較的シンプルで、経理負担を軽減したい場合に適した構成です。";
     }
 
     // カテゴリ集計
@@ -790,7 +826,10 @@
 
     resultArea.innerHTML = `
       <div class="question-card result-card">
-        <button type="button" class="btn-again" id="btnRetry">↺ はじめからやり直す</button>
+        <div class="result-actions">
+          <button type="button" class="btn-again" id="btnRetry">↺ はじめからやり直す</button>
+          <button type="button" class="btn-print" onclick="window.print()">🖨️ 結果を印刷 / PDF保存</button>
+        </div>
 
         <h2>診断結果</h2>
         <p>
@@ -826,8 +865,8 @@
         ${answersHtml}
 
         <div class="note">
-          ※ システム選定ロジックは「1〜9でYES→FX4、10〜13でYES→FX2、すべてNO→FXまいスター」に基づく簡易判定です。<br>
-          ※ 実際の提案では、売上規模・従業員数・既存システムとの連携状況等も踏まえ、担当者の判断で微調整してください。
+          ※ この診断結果は簡易的な目安です。実際の導入にあたっては、事業規模や運用体制に合わせて詳細な検討が必要です。<br>
+          ※ 詳しくは担当の会計事務所（TKC会員事務所）へご相談ください。
         </div>
       </div>
     `;
@@ -854,3 +893,4 @@
 </script>
 </body>
 </html>
+

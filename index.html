@@ -63,6 +63,8 @@
       border-radius:12px;
       box-shadow:0 4px 18px rgba(0,0,0,.05);
       padding:20px 18px 18px;
+      position:relative;           /* YES/NO を絶対配置するため */
+      padding-bottom:72px;         /* ボタン分の余白 */
     }
 
     .q-number{
@@ -88,8 +90,15 @@
     }
 
     .q-text{
-      margin-bottom:8px;
+      margin-bottom:4px;
       line-height:1.7;
+    }
+
+    .q-example{
+      font-size:.85rem;
+      color:var(--muted);
+      margin-bottom:8px;
+      line-height:1.6;
     }
 
     .point-label{
@@ -109,12 +118,12 @@
     }
 
     .btn-row{
-      margin-top:14px;
+      position:absolute;   /* カード内で位置固定 */
+      bottom:16px;
+      right:18px;
       display:flex;
       gap:12px;
-      flex-wrap:wrap;
       align-items:center;
-      justify-content:flex-end;
     }
 
     button{
@@ -152,7 +161,7 @@
     }
 
     .btn-back{
-      margin-right:auto;
+      margin-bottom:8px;
       background:transparent;
       color:var(--muted);
       border-color:transparent;
@@ -269,98 +278,111 @@
 </div>
 
 <script>
-  // PDFから読み取った設問・POINT（1〜13）
+  // 設問・POINT・例文
   const questions = [
     {
-      "id": "accountsStructure",
-      "title": "１．勘定科目体系",
-      "category": "会計・管理会計",
-      "question": "勘定科目（売上高、仕入高、販管費等）を自由に設計したい",
-      "point": "財務三表科目とは異なる勘定科目（コード）での設計および追加、並べ替えができます。また、複数の科目残高を合算する「小計科目」の登録、貸借対照表科目の部門別残高管理もできます。"
+      id: "accountsStructure",
+      title: "１．勘定科目体系",
+      category: "会計・管理会計",
+      question: "勘定科目（売上高、仕入高、販管費等）を自由に設計したい",
+      point: "財務三表科目とは異なる勘定科目（コード）での設計および追加、並べ替えができます。また、複数の科目残高を合算する「小計科目」の登録、貸借対照表科目の部門別残高管理もできます。",
+      example: "例:売上・仕入科目数を4つ以上設定する"
     },
     {
-      "id": "subAccount",
-      "title": "２．同一科目の取引先別、口座別管理併用",
-      "category": "会計・管理会計",
-      "question": "勘定科目ごとに複数（口座別・取引先別等）の残高管理がしたい",
-      "point": "１つの勘定科目に対して取引先別＋口座別等の併用管理ができます。例えば、預り金を取引先（社員A〜、取引先A〜）＋口座別（源泉所得税、社会保険料等）のような運用が可能です。"
+      id: "subAccount",
+      title: "２．同一科目の取引先別、口座別管理併用",
+      category: "会計・管理会計",
+      question: "勘定科目ごとに複数（口座別・取引先別等）の残高管理がしたい",
+      point: "１つの勘定科目に対して取引先別＋口座別等の併用管理ができます。例えば、預り金を取引先（社員A〜、取引先A〜）＋口座別（源泉所得税、社会保険料等）のような運用が可能です。",
+      example: "例:各月の売上を取引先毎と商品カテゴリー毎を同時に残高管理する"
     },
     {
-      "id": "deptPerformance",
-      "title": "３．部門業績管理",
-      "category": "部門管理",
-      "question": "部門を階層別・グループ別に管理したい",
-      "point": "部門階層構造を多段階で設計できます。また、部門階層とは異なる視点での部門業績を確認するための部門グループ設計もできます。"
+      id: "deptPerformance",
+      title: "３．部門業績管理",
+      category: "部門管理",
+      question: "部門を階層別・グループ別に管理したい",
+      point: "部門階層構造を多段階で設計できます。また、部門階層とは異なる視点での部門業績を確認するための部門グループ設計もできます。",
+      example: "例:地域毎・店舗毎・担当者毎の業績管理<br>債権債務の取引先別残高を部門ごとに管理、本支店会計を部門で行う"
     },
     {
-      "id": "deptPermission",
-      "title": "４．部門参照（入力）権限",
-      "category": "部門管理・統制",
-      "question": "経理担当者ごとに参照可能部門を制限したい",
-      "point": "経理担当者ごとに特定の部門のみ入力・業績閲覧を可とする参照権限を設定できます。また、経理担当者ごとに利用可能なメニューの制限もできます。"
+      id: "deptPermission",
+      title: "４．部門参照（入力）権限",
+      category: "部門管理・統制",
+      question: "経理担当者ごとに参照可能部門を制限したい",
+      point: "経理担当者ごとに特定の部門のみ入力・業績閲覧を可とする参照権限を設定できます。また、経理担当者ごとに利用可能なメニューの制限もできます。",
+      example: "例:自部門のデータのみ閲覧・入力できるように制限する"
     },
     {
-      "id": "voucherWorkflow",
-      "title": "５．証憑保存",
-      "category": "証憑保存・内部統制",
-      "question": "証憑保存機能を経理担当以外でも利用したい",
-      "point": "オプション「インボイス・マネジャー（FX4クラウド）」は、FX4クラウド未登録のパソコンから証憑を保存できます。また、多段階承認機能を活用した経費申請〜上長の承認〜経理担当の承認〜保存＆仕訳計上もできます。"
+      id: "voucherWorkflow",
+      title: "５．証憑保存",
+      category: "証憑保存・内部統制",
+      question: "証憑保存機能を経理担当以外でも利用したい",
+      point: "オプション「インボイス・マネジャー（FX4クラウド）」は、FX4クラウド未登録のパソコンから証憑を保存できます。また、多段階承認機能を活用した経費申請〜上長の承認〜経理担当の承認〜保存＆仕訳計上もできます。",
+      example: "例:各部門や支店のパソコンから証憑を保存する"
     },
     {
-      "id": "excelJournal",
-      "title": "６．Excelからの仕訳計上",
-      "category": "仕訳自動化",
-      "question": "Excel集計表等から仕訳を計上したい",
-      "point": "Excel作成の日報や出納帳からFX4クラウドを起動させることなく仕訳を計上できます。また、MR設計ツールと併用した運用（部門共通費の部門配賦等）もできます。"
+      id: "excelJournal",
+      title: "６．Excelからの仕訳計上",
+      category: "仕訳自動化",
+      question: "Excel集計表等から仕訳を計上したい",
+      point: "Excel作成の日報や出納帳からFX4クラウドを起動させることなく仕訳を計上できます。また、MR設計ツールと併用した運用（部門共通費の部門配賦等）もできます。",
+      example: "企業がExcelで作成している日報や出納帳から仕訳を計上する"
     },
     {
-      "id": "systemJournal",
-      "title": "７．業務システムデータからの仕訳計上",
-      "category": "仕訳自動化",
-      "question": "業務システムのデータから仕訳を計上したい",
-      "point": "仕訳読込テンプレート設計機能により、業務システムの出力データを加工することなく仕訳を計上できます。細かな単位の仕訳を手間なく計上することで、FX4クラウドを活用した詳細な財務分析が可能です。"
+      id: "systemJournal",
+      title: "７．業務システムデータからの仕訳計上",
+      category: "仕訳自動化",
+      question: "業務システムのデータから仕訳を計上したい",
+      point: "仕訳読込テンプレート設計機能により、業務システムの出力データを加工することなく仕訳を計上できます。細かな単位の仕訳を手間なく計上することで、FX4クラウドを活用した詳細な財務分析が可能です。",
+      example: "販売管理システムの出力データから売上・入金仕訳を計上する"
     },
     {
-      "id": "groupManagement",
-      "title": "８．企業グループ業績管理",
-      "category": "グループ管理",
-      "question": "グループ会社全体の業績を一元管理したい",
-      "point": "グループ会社でFX4クラウドを利用することで、内部取引を相殺したグループ業績管理ができます。また、仕訳入力や証憑保存方法など、グループ全体の経理処理を統一することもできます。"
+      id: "groupManagement",
+      title: "８．企業グループ業績管理",
+      category: "グループ管理",
+      question: "グループ会社全体の業績を一元管理したい",
+      point: "グループ会社でFX4クラウドを利用することで、内部取引を相殺したグループ業績管理ができます。また、仕訳入力や証憑保存方法など、グループ全体の経理処理を統一することもできます。",
+      example: "グループ全体業績をタイムリーかつ効率的に管理する"
     },
     {
-      "id": "ipoControl",
-      "title": "９．株式上場",
-      "category": "内部統制・IPO",
-      "question": "株式上場（IPO）している／視野に入れている",
-      "point": "IT全般統制・IT業務処理統制の対応等により、内部統制等への対応が求められる上場企業でも利用いただけます。なお、「受託業務に係る内部統制の保証報告書」（3402監査報告書）を無償で提供しています。"
+      id: "ipoControl",
+      title: "９．株式上場",
+      category: "内部統制・IPO",
+      question: "株式上場（IPO）している／視野に入れている",
+      point: "IT全般統制・IT業務処理統制の対応等により、内部統制等への対応が求められる上場企業でも利用いただけます。なお、「受託業務に係る内部統制の保証報告書」（3402監査報告書）を無償で提供しています。",
+      example: ""
     },
     {
-      "id": "deptPermissionFx2",
-      "title": "１０．部門参照（入力）権限",
-      "category": "部門管理・統制",
-      "question": "部門業績を管理したい、利用メニューを制限したい",
-      "point": "部門別（多段階で登録する場合はFX4クラウド）での業績管理ができます。また、経理担当者ごとに利用可能なメニューの制限もできます。"
+      id: "deptPermissionFx2",
+      title: "１０．部門参照（入力）権限（FX2等）",
+      category: "部門管理・統制",
+      question: "部門業績を管理したい、利用メニューを制限したい",
+      point: "部門別（多段階で登録する場合はFX4クラウド）での業績管理ができます。また、経理担当者ごとに利用可能なメニューの制限もできます。",
+      example: "※部門別の業績管理が可能です。"
     },
     {
-      "id": "payManagement",
-      "title": "１１．支払管理機能",
-      "category": "オプション：支払管理",
-      "question": "支払をシステムで管理したい、支払データの作成まで行いたい",
-      "point": "売掛金の回収、買掛金の支払い、借入金の返済、手形の決済予定等の様々な入金・支払予定を網羅した「資金繰り計画用」を作成できます。"
+      id: "payManagement",
+      title: "１１．支払管理機能",
+      category: "オプション：支払管理",
+      question: "支払をシステムで管理したい、支払データの作成まで行いたい",
+      point: "売掛金の回収、買掛金の支払い、借入金の返済、手形の決済予定等の様々な入金・支払予定を網羅した「資金繰り計画用」を作成できます。",
+      example: "例:仕入仕訳を元に支払予定をカレンダー形式で管理、銀行振込データを作成"
     },
     {
-      "id": "payroll",
-      "title": "１２．給与計算機能",
-      "category": "オプション：給与計算",
-      "question": "給与計算をする社員数が30人以上、または複数事業所か否か",
-      "point": "経営者による賃金の適正な配分の決定と給与事務の合理化を支援します。"
+      id: "payroll",
+      title: "１２．給与計算機能",
+      category: "オプション：給与計算",
+      question: "給与計算をする社員数が30人以上、または複数事業所か否か",
+      point: "経営者による賃金の適正な配分の決定と給与事務の合理化を支援します。",
+      example: "※FXまいスタークラウドの場合、30人までしか給与計算が行えません。"
     },
     {
-      "id": "reportDesign",
-      "title": "１３．MR設計ツール",
-      "category": "オプション：帳票設計・経営資料",
-      "question": "関与先が独自の資料を作成されている場合に効率化が可能",
-      "point": "マネジメントレポート（MR）設計ツールにより、FXクラウドシリーズのデータを活用したオリジナル帳表がExcelで簡単に作成できます。"
+      id: "reportDesign",
+      title: "１３．MR設計ツール",
+      category: "オプション：帳票設計・経営資料",
+      question: "関与先が独自の資料を作成されている場合に効率化が可能",
+      point: "マネジメントレポート（MR）設計ツールにより、FXクラウドシリーズのデータを活用したオリジナル帳表がExcelで簡単に作成できます。",
+      example: "例:ExcelからFXクラウドシリーズのデータにアクセスし、データを自動で取得"
     }
   ];
 
@@ -386,21 +408,23 @@
     updateProgress();
 
     area.innerHTML = `
+      ${currentIndex > 0 ? '<button type="button" class="btn-back" id="backBtn">← 戻る</button>' : ""}
       <div class="q-number">
         質問 ${currentIndex + 1} / ${total}
         <span class="q-category">${q.category}</span>
       </div>
       <div class="q-title">${q.title}</div>
       <div class="q-text">${q.question}</div>
+      ${q.example ? `<div class="q-example">${q.example}</div>` : ""}
       <div class="point-label">POINT</div>
       <div class="point-box">${q.point}</div>
       <div class="btn-row">
-        ${currentIndex > 0 ? '<button type="button" class="btn-back" id="backBtn">← 戻る</button>' : ""}
-        <button type="button" class="btn-no" data-answer="no">NO</button>
         <button type="button" class="btn-yes" data-answer="yes">YES</button>
+        <button type="button" class="btn-no" data-answer="no">NO</button>
       </div>
     `;
 
+    // YES / NO
     area.querySelectorAll("[data-answer]").forEach(btn => {
       btn.addEventListener("click", () => {
         const answer = btn.getAttribute("data-answer");
@@ -414,6 +438,7 @@
       });
     });
 
+    // 戻る
     const backBtn = area.querySelector("#backBtn");
     if (backBtn) {
       backBtn.addEventListener("click", () => {
@@ -429,9 +454,10 @@
     const total = questions.length;
     const yesCount = questions.filter(q => answers[q.id] === "yes").length;
 
-    // 1〜9のどこかでYES → FX4クラウド
-    // それがなければ 10〜13のどこかでYES → FX2クラウド
-    // 1〜13すべてNO → FXまいスタークラウド
+    // ロジック：
+    // ・1〜9まででYESがあれば FX4クラウド
+    // ・それがなく、10〜13でYESがあれば FX2クラウド
+    // ・1〜13すべてNOなら FXまいスタークラウド
     const yesFirstBlock = questions.slice(0, 9).some(q => answers[q.id] === "yes");
     const yesSecondBlock = questions.slice(9, 13).some(q => answers[q.id] === "yes");
 

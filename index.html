@@ -73,7 +73,8 @@
       padding:20px 24px;
       display:flex;
       flex-direction:column;
-      height:620px; 
+      /* 画像を削除したので高さを元に戻す */
+      height:450px; 
       position: relative;
     }
 
@@ -122,25 +123,6 @@
       padding-right:4px;
       display: flex;
       flex-direction: column;
-    }
-
-    /* --- 画像スタイル --- */
-    .q-image-container {
-      width: 100%;
-      height: 160px;
-      margin-bottom: 12px;
-      border-radius: 8px;
-      overflow: hidden;
-      background-color: var(--highlight-bg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .q-image-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
     }
 
     .q-text{
@@ -376,7 +358,7 @@
         grid-template-columns:1fr;
       }
       .question-card {
-        height: 680px; 
+        height: 500px; /* モバイル用も高さを調整 */
         padding: 16px;
       }
       .q-text {
@@ -492,7 +474,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-  // 設問データ
+  // 設問データ（画像削除済み）
   const questions = [
     {
       id: "accountsStructure",
@@ -500,8 +482,7 @@
       category: "会計・管理会計",
       question: "勘定科目（売上高、仕入高、販管費等）を自由に設計したいですか？",
       point: "財務三表科目とは異なる勘定科目（コード）での設計および追加、並べ替えができます。また、複数の科目残高を合算する「小計科目」の登録、貸借対照表科目の部門別残高管理もできます。",
-      example: "例:売上・仕入科目数を4つ以上設定する",
-      image: "https://placehold.co/600x200/eef3f6/578899?text=Account+Structure"
+      example: "例:売上・仕入科目数を4つ以上設定する"
     },
     {
       id: "subAccount",
@@ -509,8 +490,7 @@
       category: "会計・管理会計",
       question: "勘定科目ごとに複数（口座別・取引先別等）の残高管理がしたいですか？",
       point: "１つの勘定科目に対して取引先別＋口座別等の併用管理ができます。例えば、預り金を取引先（社員A〜、取引先A〜）＋口座別（源泉所得税、社会保険料等）のような運用が可能です。",
-      example: "例:各月の売上を取引先毎と商品カテゴリー毎を同時に残高管理する",
-      image: "https://placehold.co/600x200/eef3f6/578899?text=Multi+Balance+Check"
+      example: "例:各月の売上を取引先毎と商品カテゴリー毎を同時に残高管理する"
     },
     {
       id: "deptPerformance",
@@ -518,8 +498,7 @@
       category: "部門管理",
       question: "部門を階層別・グループ別に管理したいですか？",
       point: "部門階層構造を多段階で設計できます。また、部門階層とは異なる視点での部門業績を確認するための部門グループ設計もできます。",
-      example: "例:地域毎・店舗毎・担当者毎の業績管理<br>債権債務の取引先別残高を部門ごとに管理、本支店会計を部門で行う",
-      image: "https://placehold.co/600x200/eef3f6/578899?text=Department+Management"
+      example: "例:地域毎・店舗毎・担当者毎の業績管理<br>債権債務の取引先別残高を部門ごとに管理、本支店会計を部門で行う"
     },
     {
       id: "deptPermission",
@@ -527,8 +506,7 @@
       category: "部門管理・統制",
       question: "経理担当者ごとに参照可能部門を制限したいですか？",
       point: "経理担当者ごとに特定の部門のみ入力・業績閲覧を可とする参照権限を設定できます。また、経理担当者ごとに利用可能なメニューの制限もできます。",
-      example: "例:自部門のデータのみ閲覧・入力できるように制限する",
-      image: "https://placehold.co/600x200/eef3f6/578899?text=Access+Control"
+      example: "例:自部門のデータのみ閲覧・入力できるように制限する"
     },
     {
       id: "voucherWorkflow",
@@ -536,8 +514,7 @@
       category: "証憑保存・内部統制",
       question: "証憑保存機能を経理担当以外でも利用したいですか？",
       point: "オプション「インボイス・マネジャー（FX4クラウド）」は、FX4クラウド未登録のパソコンから証憑を保存できます。また、多段階承認機能を活用した経費申請〜上長の承認〜経理担当の承認〜保存＆仕訳計上もできます。",
-      example: "例:各部門や支店のパソコンから証憑を保存する",
-      image: "https://placehold.co/600x200/eef3f6/578899?text=Voucher+Storage"
+      example: "例:各部門や支店のパソコンから証憑を保存する"
     },
     {
       id: "excelJournal",
@@ -545,8 +522,7 @@
       category: "仕訳自動化",
       question: "Excel集計表等から仕訳を計上したいですか？",
       point: "Excel作成の日報や出納帳からFX4クラウドを起動させることなく仕訳を計上できます。また、MR設計ツールと併用した運用（部門共通費の部門配賦等）もできます。",
-      example: "例:企業がExcelで作成している日報や出納帳から仕訳を計上する",
-      image: "https://placehold.co/600x200/eef3f6/578899?text=Excel+Import"
+      example: "例:企業がExcelで作成している日報や出納帳から仕訳を計上する"
     },
     {
       id: "systemJournal",
@@ -554,8 +530,7 @@
       category: "仕訳自動化",
       question: "業務システムのデータから仕訳を計上したいですか？",
       point: "仕訳読込テンプレート設計機能により、業務システムの出力データを加工することなく仕訳を計上できます。細かな単位の仕訳を手間なく計上することで、FX4クラウドを活用した詳細な財務分析が可能です。",
-      example: "例:販売管理システムの出力データから売上・入金仕訳を計上する",
-      image: "https://placehold.co/600x200/eef3f6/578899?text=System+Linkage"
+      example: "例:販売管理システムの出力データから売上・入金仕訳を計上する"
     },
     {
       id: "groupManagement",
@@ -563,8 +538,7 @@
       category: "グループ管理",
       question: "グループ会社全体の業績を一元管理したいですか？",
       point: "グループ会社でFX4クラウドを利用することで、内部取引を相殺したグループ業績管理ができます。また、仕訳入力や証憑保存方法など、グループ全体の経理処理を統一することもできます。",
-      example: "例:グループ全体業績をタイムリーかつ効率的に管理する",
-      image: "https://placehold.co/600x200/eef3f6/578899?text=Group+Management"
+      example: "例:グループ全体業績をタイムリーかつ効率的に管理する"
     },
     {
       id: "ipoControl",
@@ -572,8 +546,7 @@
       category: "内部統制・IPO",
       question: "株式上場（IPO）している、または視野に入れていますか？",
       point: "IT全般統制・IT業務処理統制の対応等により、内部統制等への対応が求められる上場企業でも利用いただけます。なお、「受託業務に係る内部統制の保証報告書」（3402監査報告書）を無償で提供しています。",
-      example: "",
-      image: "https://placehold.co/600x200/eef3f6/578899?text=IPO+Support"
+      example: ""
     },
     {
       id: "deptPermissionFx2",
@@ -581,8 +554,7 @@
       category: "部門管理・統制",
       question: "部門業績を管理したい、または利用メニューを制限したいですか？",
       point: "部門別（多段階で登録する場合はFX4クラウド）での業績管理ができます。また、経理担当者ごとに利用可能なメニューの制限もできます。",
-      example: "※部門別の業績管理が可能です。",
-      image: "https://placehold.co/600x200/eef3f6/578899?text=Dept+Management"
+      example: "※部門別の業績管理が可能です。"
     },
     {
       id: "payManagement",
@@ -590,8 +562,7 @@
       category: "オプション：支払管理",
       question: "支払をシステムで管理したい、または支払データの作成まで行いたいですか？",
       point: "売掛金の回収、買掛金の支払い、借入金の返済、手形の決済予定等の様々な入金・支払予定を網羅した「資金繰り計画用」を作成できます。",
-      example: "例:仕入仕訳を元に支払予定をカレンダー形式で管理、銀行振込データを作成",
-      image: "https://placehold.co/600x200/eef3f6/578899?text=Payment+Management"
+      example: "例:仕入仕訳を元に支払予定をカレンダー形式で管理、銀行振込データを作成"
     },
     {
       id: "payroll",
@@ -599,8 +570,7 @@
       category: "オプション：給与計算",
       question: "給与計算をする社員数が30人以上、または複数事業所ですか？",
       point: "経営者による賃金の適正な配分の決定と給与事務の合理化を支援します。",
-      example: "※FXまいスタークラウドの場合、30人までしか給与計算が行えません。",
-      image: "https://placehold.co/600x200/eef3f6/578899?text=Payroll+System"
+      example: "※FXまいスタークラウドの場合、30人までしか給与計算が行えません。"
     },
     {
       id: "reportDesign",
@@ -608,8 +578,7 @@
       category: "オプション：帳票設計・経営資料",
       question: "科目残高を反映した経営管理用レポートを独自に作成していますか？",
       point: "マネジメントレポート（MR）設計ツールにより、FXクラウドシリーズのデータを活用したオリジナル帳表がExcelで簡単に作成できます。",
-      example: "例:ExcelからFXクラウドシリーズのデータにアクセスし、データを自動で取得",
-      image: "https://placehold.co/600x200/eef3f6/578899?text=Report+Design"
+      example: "例:ExcelからFXクラウドシリーズのデータにアクセスし、データを自動で取得"
     }
   ];
 
@@ -635,10 +604,7 @@
 
     updateProgress();
 
-    // 画像があれば表示する
-    const imageHtml = q.image 
-      ? `<div class="q-image-container"><img src="${q.image}" alt="${q.title}のイメージ"></div>`
-      : "";
+    // 画像レンダリング部分を削除
 
     area.innerHTML = `
       <div class="q-header-row">
@@ -655,8 +621,6 @@
           <span class="q-category">${q.category}</span>
           <span class="q-title">${q.title}</span>
         </div>
-
-        ${imageHtml}
 
         <div class="q-text">${q.question}</div>
         
@@ -912,5 +876,3 @@
 </script>
 </body>
 </html>
-
-

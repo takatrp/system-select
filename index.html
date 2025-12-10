@@ -73,7 +73,6 @@
       padding:20px 24px;
       display:flex;
       flex-direction:column;
-      /* 画像を削除したので高さを元に戻す */
       height:450px; 
       position: relative;
     }
@@ -358,7 +357,7 @@
         grid-template-columns:1fr;
       }
       .question-card {
-        height: 500px; /* モバイル用も高さを調整 */
+        height: 500px;
         padding: 16px;
       }
       .q-text {
@@ -431,7 +430,7 @@
       line-height:1.6;
     }
 
-    /* グラフコンテナ：重要 */
+    /* グラフコンテナ */
     .chart-container {
       position: relative;
       width: 100%;
@@ -474,7 +473,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-  // 設問データ（画像削除済み）
+  // 設問データ
   const questions = [
     {
       id: "accountsStructure",
@@ -561,7 +560,7 @@
       title: "１１．支払管理機能",
       category: "オプション：支払管理",
       question: "支払をシステムで管理したい、または支払データの作成まで行いたいですか？",
-      point: "売掛金の回収、買掛金の支払い、借入金の返済、手形の決済予定等の様々な入金・支払予定を網羅した「資金繰り計画用」を作成できます。",
+      point: "売掛金の回収、買掛金の支払い、借入金の返済、手形の決済予定等の様々な入金・支払予定を網羅した「資金繰り計画表」を作成できます。",
       example: "例:仕入仕訳を元に支払予定をカレンダー形式で管理、銀行振込データを作成"
     },
     {
@@ -603,8 +602,6 @@
     resultArea.style.display = "none";
 
     updateProgress();
-
-    // 画像レンダリング部分を削除
 
     area.innerHTML = `
       <div class="q-header-row">
@@ -663,7 +660,6 @@
   }
 
   function createCategoryBarChart(categoryStats) {
-    // グラフを描画するcanvas要素を取得
     const canvas = document.getElementById("categoryBar");
     if (!canvas || !window.Chart) return;
 
@@ -680,7 +676,6 @@
       categoryChartInstance.destroy();
     }
 
-    // Chart.jsの設定
     categoryChartInstance = new Chart(ctx, {
       type: 'bar',
       data: {
@@ -696,7 +691,7 @@
       options: {
         indexAxis: 'y', // 横棒グラフ
         responsive: true,
-        maintainAspectRatio: false, // コンテナの高さを維持して描画
+        maintainAspectRatio: false, 
         plugins: {
           legend: { display: false },
           tooltip: {
@@ -836,7 +831,6 @@
 
           <div>
             <h3>カテゴリ別 YES比率</h3>
-            <!-- 重要：グラフのコンテナ -->
             <div class="chart-container">
               <canvas id="categoryBar"></canvas>
             </div>
@@ -855,7 +849,6 @@
 
     resultArea.style.display = "block";
 
-    // グラフ生成
     createCategoryBarChart(categoryStats);
 
     const retryBtn = document.getElementById("btnRetry");
@@ -876,3 +869,5 @@
 </script>
 </body>
 </html>
+
+
